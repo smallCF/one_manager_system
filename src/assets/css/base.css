@@ -1,0 +1,10 @@
+html,
+body {
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+}
+
+.login_warp .el-input__prefix {
+    width: 25px;
+}

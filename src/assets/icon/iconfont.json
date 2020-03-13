@@ -1,0 +1,51 @@
+{
+  "id": "1665575",
+  "name": "elementui",
+  "font_family": "element-icon",
+  "css_prefix_text": "el-icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "13274329",
+      "name": "展开",
+      "font_class": "shouqi",
+      "unicode": "e6b0",
+      "unicode_decimal": 59056
+    },
+    {
+      "icon_id": "593497",
+      "name": "展开",
+      "font_class": "weibiaoti25",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "479192",
+      "name": "眼睛",
+      "font_class": "yanjing",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "1224929",
+      "name": "open-eyes",
+      "font_class": "open-eyes",
+      "unicode": "e6af",
+      "unicode_decimal": 59055
+    },
+    {
+      "icon_id": "11219352",
+      "name": "eye",
+      "font_class": "eye",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "705689",
+      "name": "锁",
+      "font_class": "suo",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    }
+  ]
+}
