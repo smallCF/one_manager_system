@@ -26,7 +26,7 @@
             style="width:120px;"
           >
             <el-option label="全部" value="all"></el-option>
-            <el-option label="用户ID" value="terminal_device_group_id"></el-option>
+            <el-option label="商品名称" value="terminal_device_group_id"></el-option>
           </el-select>
           <el-input
             placeholder="请输入搜素关键字"
@@ -39,9 +39,9 @@
           >
             <el-button slot="append" icon="el-icon-search" @click.prevent="handleSearch()"></el-button>
           </el-input>
-         <!--
-           <el-button type="primary" @click="showAddDevices()" icon="el-icon-s-custom" plain>添加用户</el-button>
-         -->
+          <!--
+            <el-button type="primary" @click="NewAdd()" icon="el-icon-s-custom" plain>添加商品</el-button>
+          -->
         </el-col>
       </el-row>
       <el-table
@@ -49,28 +49,33 @@
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header"
-        :stripe=true
         height="520"
         max-height="520"
       >
         <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-        <el-table-column prop="name" label="用户名"></el-table-column>
-        <el-table-column label="密码">
-          <template slot-scope="scope">{{scope.row.money | hidepassword}}</template>
-        </el-table-column>
-        <el-table-column label="账户余额">
-          <template slot-scope="scope">￥{{scope.row.money}}</template>
-        </el-table-column>
-        <el-table-column prop="address" label="邀请码"></el-table-column>
-        <el-table-column prop="address" label="被邀请码"></el-table-column>
-        <el-table-column prop="date" label="注册时间"></el-table-column>
-        <el-table-column label="操作" align="center" fixed="right">
+        <el-table-column prop="name" label="用户"></el-table-column>
+        <el-table-column prop="name" label="商品名"></el-table-column>
+        <el-table-column prop="address" label="联系人"></el-table-column>
+        <el-table-column prop="address" label="联系电话"></el-table-column>
+        <el-table-column prop="address" label="地址"></el-table-column>
+        <el-table-column prop="address" label="快递公司"></el-table-column>
+        <el-table-column prop="address" label="运单号"></el-table-column>
+        <el-table-column label="状态" align="center">
           <template slot-scope="scope">
-            <!--<el-button
+            <el-tag
+              :type="scope.row.state==='已签收'?'success':(scope.row.state==='派送中'?'danger':'')"
+            >{{scope.row.state}}</el-tag>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="date" label="中奖时间"></el-table-column>
+        <el-table-column label="操作" width="180" align="center" fixed="right">
+          <template slot-scope="scope">
+            <el-button
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button>-->
+            >编辑</el-button>
             <el-button
               type="text"
               icon="el-icon-delete"
@@ -93,21 +98,51 @@
         ></el-pagination>
       </div>
     </div>
-
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-      <el-form ref="form" :model="form" label-width="70px">
-        <el-form-item label="用户名">
-          <el-input v-model="form.name"></el-input>
+    <el-dialog title="修改商品" :visible.sync="editVisible" :top="dialogtop">
+      <el-form :model="form" @submit.native.prevent :rules="rules" ref="form">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="联系人" :label-width="formLabelWidth" prop="name">
+              <el-input v-model="form.name"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="联系电话" :label-width="formLabelWidth" prop="name">
+              <el-input v-model="form.name"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="详情地址" :label-width="formLabelWidth" prop="price">
+              <el-input v-model="form.price"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="快递公司" :label-width="formLabelWidth" prop="money">
+          <el-input v-model="form.money"></el-input>
         </el-form-item>
-        <el-form-item label="地址">
-          <el-input v-model="form.address"></el-input>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="运单号" :label-width="formLabelWidth" prop="money">
+          <el-input v-model="form.money"></el-input>
+        </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="描述" :label-width="formLabelWidth">
+          <el-input  placeholder="请输入内容" v-model="form.description"></el-input>
+        </el-form-item>
+        <el-form-item label="状态" :label-width="formLabelWidth">
+          <el-input  placeholder="请输入内容" v-model="form.description"></el-input>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="editVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveEdit">确 定</el-button>
-      </span>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="ExitEdit()">取 消</el-button>
+        <el-button type="primary" @click="AddEdit('form')">确 定</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -118,6 +153,7 @@ export default {
   name: "basetable",
   data() {
     return {
+      srcList: [],
       query: {
         address: "",
         name: "",
@@ -171,14 +207,12 @@ export default {
       form: {},
       idx: -1,
       id: -1,
-      rules:[]
+      dialogFormVisibleAdd: false,
+      formLabelWidth: "25%",
+      dialogtop: "14vh",
+      showhide: true,
+      rules: []
     };
-  },
-  filters:{
-    hidepassword(val){
-      var new_val = val+"";
-      return new_val.replace(/\S/g,"*");
-    }
   },
   created() {
     // this.getData();
@@ -187,6 +221,12 @@ export default {
     handleSizeChange(val) {
       this.query.pageSize = val;
     },
+    handleRemove() {
+      this.showhide = true;
+    },
+    hidebeform() {
+      this.showhide = false;
+    },
     SearchChange() {
       if (this.inputdisabled && this.query.key.length == 0) {
         this.inputdisabled = false;
@@ -194,7 +234,7 @@ export default {
       }
       if (this.query.name != "all") {
         this.inputdisabled = false;
-        if(this.query.key.length != 0){
+        if (this.query.key.length != 0) {
           //执行切换时的操作
         }
       } else {
@@ -231,7 +271,18 @@ export default {
     handleEdit(index, row) {
       this.idx = index;
       this.form = row;
+      this.srcList.push(this.form.thumb);
       this.editVisible = true;
+    },
+    NewAdd() {
+      this.form = {};
+      this.dialogFormVisibleAdd = true;
+    },
+    ExitAdd() {
+      this.dialogFormVisibleAdd = false;
+    },
+    ExitEdit() {
+      this.editVisible = false;
     },
     // 保存编辑
     saveEdit() {
@@ -243,6 +294,21 @@ export default {
     handlePageChange(val) {
       this.$set(this.query, "pageIndex", val);
       this.getData();
+    },
+    beforeAvatarUpload(file) {
+      const isJPG =
+        file.type === "image/jpeg" ||
+        file.type === "image/png" ||
+        file.type == "image/jpg";
+      const isLt2M = file.size / 1024 / 1024 < 1;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG/png 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 1MB!");
+      }
+      return isJPG && isLt2M;
     }
   }
 };
@@ -284,9 +350,12 @@ export default {
   width: 30%;
 }
 .SearchRow {
-  margin: 5px 10px 10px 10px;
+  margin: 0px 10px 10px 10px;
 }
-.pagination{
-    padding-top: 5px;
+.uploade {
+  margin-bottom: 0px;
+}
+.pagination {
+  padding-top: 5px;
 }
 </style>

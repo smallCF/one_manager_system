@@ -5,6 +5,18 @@ body {
     height: 100%;
 }
 
+.aside-content .el-menu-item {
+    padding: 0px 44px;
+}
+
 .login_warp .el-input__prefix {
     width: 25px;
+}
+
+.el-image-viewer__close {
+    color: white;
+}
+
+.uploade .el-form-item__content {
+    display: flex;
 }

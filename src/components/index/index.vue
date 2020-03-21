@@ -23,7 +23,7 @@
           </div>
         </div>
       </el-header>
-      <el-main></el-main>
+      <el-main class="el-main"></el-main>
     </el-container>
   </el-container>
 </template>
